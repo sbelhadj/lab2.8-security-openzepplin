@@ -44,7 +44,7 @@ Avant de commencer ce lab, assurez-vous d'avoir configuré votre environnement c
 
 ### **Étapes du Lab**
 
-#### **1\. Préparer l'environnement**  
+#### **1. Préparer l'environnement**  
  
 
 **Installer les dépendances** en utilisant npm :  
@@ -61,7 +61,7 @@ npm install
 
 * * *
 
-#### **2\. Créer le contrat solidity avec OpenZeppelin**
+#### **2. Créer le contrat solidity avec OpenZeppelin**
 
 1.  Créez un fichier contracts/InstantPaymentHubSecure.sol dans le répertoire **contracts/**.
 2.  Implémentez un contrat de paiement instantané en utilisant **OpenZeppelin** :  
@@ -93,7 +93,7 @@ contract InstantPaymentHubSecure is Ownable, Pausable, ReentrancyGuard {
 
         require(!paused(), "Contract is paused");
 
-        \_;
+        _;
 
     }
 
@@ -107,7 +107,7 @@ contract InstantPaymentHubSecure is Ownable, Pausable, ReentrancyGuard {
 
     function deposit() public payable whenNotPaused {
 
-        balances\[msg.sender\] = balances\[msg.sender\].add(msg.value);
+        balances[msg.sender] = balances[msg.sender].add(msg.value);
 
     }
 
@@ -115,11 +115,11 @@ contract InstantPaymentHubSecure is Ownable, Pausable, ReentrancyGuard {
 
     function instantPayment(address recipient, uint256 amount) public whenNotPaused nonReentrant {
 
-        require(balances\[msg.sender\] >= amount, "Insufficient balance");
+        require(balances[msg.sender] >= amount, "Insufficient balance");
 
-        balances\[msg.sender\] = balances\[msg.sender\].sub(amount);
+        balances[msg.sender] = balances[msg.sender].sub(amount);
 
-        balances\[recipient\] = balances\[recipient\].add(amount);
+        balances[recipient] = balances[recipient].add(amount);
 
         emit PaymentMade(msg.sender, recipient, amount);
 
@@ -129,11 +129,11 @@ contract InstantPaymentHubSecure is Ownable, Pausable, ReentrancyGuard {
 
     function withdraw(uint256 amount) public whenNotPaused nonReentrant {
 
-        require(balances\[msg.sender\] >= amount, "Insufficient balance");
+        require(balances[msg.sender] >= amount, "Insufficient balance");
 
         payable(msg.sender).transfer(amount);
 
-        balances\[msg.sender\] = balances\[msg.sender\].sub(amount);
+        balances[msg.sender] = balances[msg.sender].sub(amount);
 
     }
 
@@ -141,7 +141,7 @@ contract InstantPaymentHubSecure is Ownable, Pausable, ReentrancyGuard {
 
     function pause() public onlyOwner {
 
-        \_pause();
+        _pause();
 
     }
 
@@ -149,7 +149,7 @@ contract InstantPaymentHubSecure is Ownable, Pausable, ReentrancyGuard {
 
     function unpause() public onlyOwner {
 
-        \_unpause();
+        _unpause();
 
     }
 
@@ -167,7 +167,7 @@ contract InstantPaymentHubSecure is Ownable, Pausable, ReentrancyGuard {
 
 * * *
 
-#### **3\. Déployer le contrat sur Sepolia**
+#### **3. Déployer le contrat sur Sepolia**
 
 1.  **Créer un script de déploiement** dans **scripts/deploy.js** :  
      
@@ -176,7 +176,7 @@ contract InstantPaymentHubSecure is Ownable, Pausable, ReentrancyGuard {
 
 async function main() {
 
-    const \[deployer\] = await ethers.getSigners();
+    const [deployer] = await ethers.getSigners();
 
     console.log("Déployé par : ", deployer.address);
 
@@ -214,7 +214,7 @@ Cela déploiera le contrat sur le testnet Sepolia et vous donnera l'adresse du c
 
 * * *
 
-#### **4\. Interagir avec le contrat via Hardhat**
+#### **4. Interagir avec le contrat via Hardhat**
 
 1.  **Créer un script d'interaction** dans **scripts/interact.js** pour tester le contrat **InstantPaymentHubSecure** déployé :  
      
@@ -223,9 +223,9 @@ Cela déploiera le contrat sur le testnet Sepolia et vous donnera l'adresse du c
 
 async function main() {
 
-    const \[deployer\] = await ethers.getSigners();
+    const [deployer] = await ethers.getSigners();
 
-    const contractAddress = "VOTRE\_ADRESSE\_DE\_CONTRAT"; // Remplacez par l'adresse du contrat déployé
+    const contractAddress = "VOTRE_ADRESSE_DE_CONTRAT"; // Remplacez par l'adresse du contrat déployé
 
     const contract = await ethers.getContractAt("InstantPaymentHubSecure", contractAddress);
 
@@ -239,7 +239,7 @@ async function main() {
 
     // Effectuer un paiement instantané
 
-    const recipient = "ADRESSE\_D\_UN\_UTILISATEUR"; // Remplacez par l'adresse du destinataire
+    const recipient = "ADRESSE_D_UN_UTILISATEUR"; // Remplacez par l'adresse du destinataire
 
     const paymentTx = await contract.instantPayment(recipient, ethers.utils.parseEther("0.5"));
 
@@ -284,7 +284,7 @@ Cela interagira avec le contrat déployé en effectuant des transactions de dép
 
 * * *
 
-#### **5\. Vérification des résultats sur Sepolia via Etherscan**
+#### **5. Vérification des résultats sur Sepolia via Etherscan**
 
 *   Une fois que vous avez effectué des transactions, vous pouvez vérifier leur état sur Sepolia Etherscan.
 *   Recherchez l'adresse du contrat déployé et consultez les transactions pour vérifier les paiements effectués.  
@@ -349,4 +349,5 @@ lab-oz-secure-contracts/
      
 
 Déployer et interagir avec un contrat sécurisé sur le testnet **Sepolia**.
+
 
